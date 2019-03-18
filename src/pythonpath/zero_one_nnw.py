@@ -69,7 +69,8 @@ class ZeroOneNNW:
         cost = np.zeros(len(train_data))
 
         for e in range(epoc):
-            for i, (t_data, t_label) in enumerate(zip(train_data, train_label)):
+            for i, (t_data, t_label) in enumerate(
+                    zip(train_data, train_label)):
                 self.__forward(t_data, i)
                 cost[i] = ((self.layer_3_out - t_label)**2).sum()
                 self.__backpropagation(t_label, w_1_gradient, w_2_gradient,
@@ -118,8 +119,10 @@ class ZeroOneNNW:
         l_3_in_error = l_3_out_error * \
             self.__derivative_sigmoid(self.layer_3_in)
         # 出力層への重み行列の微分
-        w_2_error = np.array([self.layer_2_out * l_3_in_error[i]
-                              for i in range(2)])
+        w_2_error = np.array([
+            self.layer_2_out * l_3_in_error[i]
+            for i in range(self.unit_num_layer_3)
+        ])
         # 出力層へのバイアスの微分
         b_2_error = l_3_in_error
         # 中間層の出力ユニットの微分
@@ -128,14 +131,14 @@ class ZeroOneNNW:
         l_2_in_error = l_2_out_error * \
             self.__derivative_sigmoid(self.layer_2_in)
         # 中間層への重み行列の微分
-        w_1_error = np.array([self.layer_1_out * l_2_in_error[i]
-                              for i in range(3)])
+        w_1_error = np.array([
+            self.layer_1_out * l_2_in_error[i]
+            for i in range(self.unit_num_layer_2)
+        ])
         # 中間層へのバイアスの微分
         b_1_error = l_2_in_error
 
         # 勾配の計算(アイテムごとの微分を足し合わせる)
-        # print(w_1_gradient)
-        # print(w_1_error)
         w_1_gradient += w_1_error
         b_1_gradient += b_1_error
         w_2_gradient += w_2_error
